@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->captureVideoButton, &QPushButton::clicked,
             videoRecorder, &VideoRecorder::startStopRecording);
 
+    connect(ui->filterButton, &QPushButton::clicked,
+            videoRecorder, &VideoRecorder::changeFilterState);
+
     connect(ui->setPathButton, &QPushButton::clicked,
             this, [this]() {
                 QString dir = QFileDialog::getExistingDirectory(this,

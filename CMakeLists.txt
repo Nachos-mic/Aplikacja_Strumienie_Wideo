@@ -35,6 +35,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         videorecorder.cpp videorecorder.h
         utils.cpp utils.h
+        mask.h mask.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET VideoRecorder_Widgets APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

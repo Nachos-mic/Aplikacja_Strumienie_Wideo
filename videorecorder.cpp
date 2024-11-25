@@ -67,6 +67,21 @@ void VideoRecorder::updateFrame()
         if (image.isNull())
             return;
 
+        if(filter_set){
+            Mask::applyMaskToFrame(image);
+        }
+
+        //Przypisanie klatek wideo do CaptureSession (wtedy ich używa do zapisu)
+
+        QVideoFrame video_frame(QVideoFrameFormat(image.size(),QVideoFrameFormat::Format_BGRA8888));
+        video_frame.map(QVideoFrame::WriteOnly);
+        memcpy(video_frame.bits(0), image.constBits(),
+               image.sizeInBytes());
+        video_frame.unmap();
+
+        capture_session.videoSink()->setVideoFrame(video_frame);
+
+
         QByteArray byteArray;
         {
             QBuffer buffer(&byteArray);
@@ -148,6 +163,7 @@ bool VideoRecorder::configureMediaRecorder()
 
     ptr_media_recorder->setMediaFormat(format);
     ptr_media_recorder->setQuality(QMediaRecorder::HighQuality);
+    ptr_media_recorder->setVideoFrameRate(30.0);
     capture_session.setRecorder(ptr_media_recorder);
 
     return true;
@@ -156,6 +172,7 @@ bool VideoRecorder::configureMediaRecorder()
 void VideoRecorder::startStopRecording()
 {
     if (is_recording) {
+        qDebug() << "Stopped Recording";
         ptr_media_recorder->stop();
         is_recording = false;
         emit recordingStatusChanged(false);
@@ -168,5 +185,14 @@ void VideoRecorder::startStopRecording()
         ptr_media_recorder->record();
         is_recording = true;
         emit recordingStatusChanged(true);
+    }
+}
+
+void VideoRecorder::changeFilterState(){
+    if(filter_set){
+        filter_set = false;
+        qDebug() << "Stopped Filtering";
+    }else{
+        filter_set = true;
     }
 }

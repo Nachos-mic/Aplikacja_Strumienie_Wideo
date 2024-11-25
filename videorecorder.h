@@ -18,12 +18,11 @@
 #include <QUrl>
 
 #include "utils.h"
+#include "mask.h"
 
 class VideoRecorder : public QObject
 {
     Q_OBJECT
-
-
 
 public:
     explicit VideoRecorder(QObject *parent = nullptr);
@@ -40,6 +39,7 @@ public slots:
     void setCamera(int index);
     void captureFrame();
     void startStopRecording();
+    void changeFilterState();
 
 signals:
     void cameraListChanged();
@@ -70,6 +70,8 @@ private:
     QList<QCameraDevice> tab_camera_devices;
 
     bool is_recording;
+    bool filter_set = false;
+
 };
 
 #endif // VIDEORECORDER_H
