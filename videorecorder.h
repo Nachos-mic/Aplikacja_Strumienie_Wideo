@@ -16,6 +16,7 @@
 #include <QMediaRecorder>
 #include <QMediaFormat>
 #include <QUrl>
+#include <QMediaPlayer>
 
 #include "utils.h"
 #include "mask.h"
@@ -34,6 +35,10 @@ public:
 
     QString getCurrentPath() const { return Utils::getMediaPath(); }
     void setCurrentPath(const QString &path) {qDebug() << path; Utils::setMediaPath(path);};
+    void playVideo(const QString path);
+
+    bool getPlayerState();
+    void setPlayerState(bool state);
 
 public slots:
     void setCamera(int index);
@@ -63,13 +68,18 @@ private:
     QMediaRecorder* ptr_media_recorder;
     QCamera *ptr_camera;
     QVideoSink *ptr_video_sink;
+
     QTimer *ptr_frame_timer;
     QFile* ptr_video_file;
+
+    QMediaPlayer *ptr_media_player;
+    QVideoSink* ptr_video_player_sink;
 
     QStringList tab_camera_list;
     QList<QCameraDevice> tab_camera_devices;
 
-    bool is_recording;
+    bool is_recording = true;
+    bool is_video = false;
     bool filter_set = false;
 
 };

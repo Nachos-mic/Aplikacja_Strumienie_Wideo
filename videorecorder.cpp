@@ -82,15 +82,15 @@ void VideoRecorder::updateFrame()
         capture_session.videoSink()->setVideoFrame(video_frame);
 
 
-        QByteArray byteArray;
+        QByteArray byte_arr;
         {
-            QBuffer buffer(&byteArray);
+            QBuffer buffer(&byte_arr);
             if (buffer.open(QIODevice::WriteOnly)) {
                 image.save(&buffer, "JPEG", 25);
             }
         }
 
-        QString new_frame = QString("data:image/jpeg;base64,%1").arg(QString::fromLatin1(byteArray.toBase64()));
+        QString new_frame = QString("data:image/jpeg;base64,%1").arg(QString::fromLatin1(byte_arr.toBase64()));
         frame = new_frame;
         emit frameChanged(frame);
     }
@@ -188,6 +188,66 @@ void VideoRecorder::startStopRecording()
     }
 }
 
+void VideoRecorder::playVideo(QString path){
+
+    if(is_video == false){
+
+        if (ptr_camera) {
+            ptr_camera->stop();
+            ptr_frame_timer->stop();
+        }
+
+        ptr_media_player = new QMediaPlayer(this);
+        ptr_video_player_sink = new QVideoSink(this);
+
+        ptr_media_player->setVideoSink(ptr_video_player_sink);
+
+        connect(ptr_video_player_sink, &QVideoSink::videoFrameChanged,
+                this, [this](const QVideoFrame &frame) {
+                    if (!frame.isValid()) return;
+
+                    QVideoFrame copy_frame = frame;
+                    if (!copy_frame.map(QVideoFrame::ReadOnly))
+                        return;
+
+                    QImage image = copy_frame.toImage();
+                    copy_frame.unmap();
+
+                    if (image.isNull())
+                        return;
+
+                    QByteArray byte_arr;
+                    QBuffer buffer(&byte_arr);
+                    if (buffer.open(QIODevice::WriteOnly)) {
+                        image.save(&buffer, "JPEG", 25);
+                    }
+
+                    QString new_frame = QString("data:image/jpeg;base64,%1")
+                                            .arg(QString::fromLatin1(byte_arr.toBase64()));
+                    this->frame = new_frame;
+                    emit frameChanged(this->frame);
+                });
+
+        is_video = true;
+        ptr_media_player->setSource(QUrl::fromLocalFile(path));
+        ptr_media_player->play();
+
+    }else{
+
+        ptr_media_player->stop();
+        is_video = false;
+        ptr_media_player->setVideoSink(nullptr);
+        delete ptr_media_player;
+        ptr_media_player = nullptr;
+
+        if (ptr_camera) {
+            ptr_camera->start();
+            ptr_frame_timer->start();
+        }
+    }
+}
+
+
 void VideoRecorder::changeFilterState(){
     if(filter_set){
         filter_set = false;
@@ -195,4 +255,12 @@ void VideoRecorder::changeFilterState(){
     }else{
         filter_set = true;
     }
+}
+
+bool VideoRecorder::getPlayerState(){
+    return is_video;
+}
+
+void VideoRecorder::setPlayerState(bool state){
+    is_video = state;
 }

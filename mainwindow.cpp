@@ -39,6 +39,29 @@ MainWindow::MainWindow(QWidget *parent)
                 }
             });
 
+    connect(ui->playVideoButton, &QPushButton::clicked,
+            this, [this]() {
+                if(videoRecorder->getPlayerState() == false){
+
+                    QString file = QFileDialog::getOpenFileName(this,"Select Directory",videoRecorder->getCurrentPath());
+                    if (!file.isEmpty()) {
+                        videoRecorder->playVideo(file);
+                        ui->cameraComboBox->setEnabled(false);
+                        ui->captureFrameBUtton->setEnabled(false);
+                        ui->captureVideoButton->setEnabled(false);
+                        ui->filterButton->setEnabled(false);
+                        ui->playVideoButton->setText("Stop playing");
+                    }
+                }else{
+                    videoRecorder->playVideo("");
+                    ui->cameraComboBox->setEnabled(true);
+                    ui->captureFrameBUtton->setEnabled(true);
+                    ui->captureVideoButton->setEnabled(true);
+                    ui->filterButton->setEnabled(true);
+                    ui->playVideoButton->setText("Play Video");
+                }
+            });
+
     if (ui->cameraComboBox->count() > 0) {
         videoRecorder->setCamera(0);
     }
