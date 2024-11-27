@@ -62,6 +62,7 @@ private slots:
 private:
     void updateCameraList();
     bool configureMediaRecorder();
+    void recordVideo();
 
     QMediaCaptureSession capture_session;
 

@@ -73,16 +73,6 @@ void VideoRecorder::updateFrame()
             image = Mask::applyMaskToFrame(image);
         }
 
-        if(is_recording){
-            QVideoFrame video_frame(QVideoFrameFormat(image.size(),QVideoFrameFormat::Format_BGRA8888));
-            video_frame.map(QVideoFrame::WriteOnly);
-            memcpy(video_frame.bits(0), image.constBits(),
-                   image.sizeInBytes());
-            video_frame.unmap();
-
-            capture_session.videoSink()->setVideoFrame(video_frame);
-        }
-
         QByteArray byte_arr;
         {
             QBuffer buffer(&byte_arr);
@@ -172,6 +162,28 @@ bool VideoRecorder::configureMediaRecorder()
     capture_session.setRecorder(ptr_media_recorder);
 
     return true;
+}
+
+void VideoRecorder::recordVideo(){
+
+    if (last_frame.isValid()) {
+        if (!last_frame.map(QVideoFrame::ReadOnly))
+            return;
+
+        QImage image = last_frame.toImage();
+        last_frame.unmap();
+
+        if (image.isNull())
+            return;
+
+        QVideoFrame video_frame(QVideoFrameFormat(image.size(),QVideoFrameFormat::Format_BGRA8888));
+        video_frame.map(QVideoFrame::WriteOnly);
+        memcpy(video_frame.bits(0), image.constBits(),
+               image.sizeInBytes());
+        video_frame.unmap();
+
+        capture_session.videoSink()->setVideoFrame(video_frame);
+    }
 }
 
 void VideoRecorder::startStopRecording()
