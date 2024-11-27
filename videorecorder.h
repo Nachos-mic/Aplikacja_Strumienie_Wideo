@@ -37,14 +37,17 @@ public:
     void setCurrentPath(const QString &path) {qDebug() << path; Utils::setMediaPath(path);};
     void playVideo(const QString path);
 
-    bool getPlayerState();
-    void setPlayerState(bool state);
+    bool getPlayerState(){return is_video;};
+    void setPlayerState(bool state){is_video = state;};
+
+    QStringList getMaskList() const { return tab_mask_list;}
 
 public slots:
     void setCamera(int index);
+    void setMask(int index);
     void captureFrame();
     void startStopRecording();
-    void changeFilterState();
+    // void changeFilterState();
 
 signals:
     void cameraListChanged();
@@ -77,6 +80,7 @@ private:
 
     QStringList tab_camera_list;
     QList<QCameraDevice> tab_camera_devices;
+    QStringList tab_mask_list = {"None" , "Left Sobel" , "Right Sobel" , "Outline","Emboss" };
 
     bool is_recording = true;
     bool is_video = false;

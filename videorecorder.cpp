@@ -67,20 +67,21 @@ void VideoRecorder::updateFrame()
         if (image.isNull())
             return;
 
+        //Ustawianie filtra
+
         if(filter_set){
-            Mask::applyMaskToFrame(image);
+            image = Mask::applyMaskToFrame(image);
         }
 
-        //Przypisanie klatek wideo do CaptureSession (wtedy ich używa do zapisu)
+        if(is_recording){
+            QVideoFrame video_frame(QVideoFrameFormat(image.size(),QVideoFrameFormat::Format_BGRA8888));
+            video_frame.map(QVideoFrame::WriteOnly);
+            memcpy(video_frame.bits(0), image.constBits(),
+                   image.sizeInBytes());
+            video_frame.unmap();
 
-        QVideoFrame video_frame(QVideoFrameFormat(image.size(),QVideoFrameFormat::Format_BGRA8888));
-        video_frame.map(QVideoFrame::WriteOnly);
-        memcpy(video_frame.bits(0), image.constBits(),
-               image.sizeInBytes());
-        video_frame.unmap();
-
-        capture_session.videoSink()->setVideoFrame(video_frame);
-
+            capture_session.videoSink()->setVideoFrame(video_frame);
+        }
 
         QByteArray byte_arr;
         {
@@ -144,6 +145,10 @@ void VideoRecorder::captureFrame()
     frame.unmap();
 
     if (image.isNull()) return;
+
+    if(filter_set){
+        image = Mask::applyMaskToFrame(image);
+    }
 
     QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
     QString filename = Utils::getMediaPath() + "/captured_img_" + timestamp + ".png";
@@ -248,19 +253,22 @@ void VideoRecorder::playVideo(QString path){
 }
 
 
-void VideoRecorder::changeFilterState(){
-    if(filter_set){
-        filter_set = false;
-        qDebug() << "Stopped Filtering";
-    }else{
+// void VideoRecorder::changeFilterState(){
+//     if(filter_set){
+//         filter_set = false;
+//         qDebug() << "Stopped Filtering";
+//     }else{
+//         filter_set = true;
+//     }
+// }
+
+void VideoRecorder::setMask(int index){
+    if(index > 0){
         filter_set = true;
+        Mask::setFilterMask(index);
+    }else{
+        filter_set = false;
     }
+
 }
 
-bool VideoRecorder::getPlayerState(){
-    return is_video;
-}
-
-void VideoRecorder::setPlayerState(bool state){
-    is_video = state;
-}

@@ -6,6 +6,7 @@
 #include <QVideoFrame>
 #include <QImage>
 #include <QDebug>
+#include <stdio.h>
 #include <memory>
 
 class Mask : public QObject
@@ -16,9 +17,14 @@ public:
     ~Mask();
 
 public slots:
-    static void applyMaskToFrame(QImage &frame);
+    static QImage applyMaskToFrame(QImage &frame);
+    static void setFilterMask(int index){chosen_mask = index;};
 
+private:
+    static const std::vector<float>& getMask();
+    static const int getFilterMask(){return chosen_mask;};
 
+   static inline int chosen_mask = 0;
 };
 
 #endif // MASK_H

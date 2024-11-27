@@ -6,9 +6,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , videoRecorder(new VideoRecorder(this))
 {
+
     ui->setupUi(this);
 
     ui->cameraComboBox->addItems(videoRecorder->getCameraList());
+    ui->filterComboBox->addItems(videoRecorder->getMaskList());
 
     connect(videoRecorder, &VideoRecorder::frameChanged,
             this, &MainWindow::updateFrame);
@@ -26,8 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->captureVideoButton, &QPushButton::clicked,
             videoRecorder, &VideoRecorder::startStopRecording);
 
-    connect(ui->filterButton, &QPushButton::clicked,
-            videoRecorder, &VideoRecorder::changeFilterState);
+    connect(ui->filterComboBox,
+            static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            videoRecorder, &VideoRecorder::setMask);
 
     connect(ui->setPathButton, &QPushButton::clicked,
             this, [this]() {
@@ -49,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
                         ui->cameraComboBox->setEnabled(false);
                         ui->captureFrameBUtton->setEnabled(false);
                         ui->captureVideoButton->setEnabled(false);
-                        ui->filterButton->setEnabled(false);
+                        ui->filterComboBox->setEnabled(false);
                         ui->playVideoButton->setText("Stop playing");
                     }
                 }else{
@@ -57,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
                     ui->cameraComboBox->setEnabled(true);
                     ui->captureFrameBUtton->setEnabled(true);
                     ui->captureVideoButton->setEnabled(true);
-                    ui->filterButton->setEnabled(true);
+                    ui->filterComboBox->setEnabled(true);
                     ui->playVideoButton->setText("Play Video");
                 }
             });
