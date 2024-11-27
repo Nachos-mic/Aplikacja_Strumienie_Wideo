@@ -20,6 +20,7 @@ public:
 private slots:
     void updateFrame(const QString& frame);
     void updateRecordingStatus(bool isRecording);
+    void updateCameraList();
 
 private:
     Ui::MainWindow *ui;

@@ -18,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(videoRecorder, &VideoRecorder::recordingStatusChanged,
             this, &MainWindow::updateRecordingStatus);
 
+    connect(videoRecorder, &VideoRecorder::cameraListChanged,
+            this, &MainWindow::updateCameraList);
+
     connect(ui->cameraComboBox,
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             videoRecorder, &VideoRecorder::setCamera);
@@ -92,4 +95,10 @@ void MainWindow::updateFrame(const QString& frameData)
 void MainWindow::updateRecordingStatus(bool isRecording)
 {
     ui->captureVideoButton->setText(isRecording ? "Stop Recording" : "Capture Video");
+}
+
+void MainWindow::updateCameraList()
+{
+    ui->cameraComboBox->clear();
+    ui->cameraComboBox->addItems(videoRecorder->getCameraList());
 }

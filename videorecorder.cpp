@@ -25,6 +25,10 @@ VideoRecorder::VideoRecorder(QObject *parent)
     connect(ptr_frame_timer, &QTimer::timeout, this, &VideoRecorder::updateFrame);
     ptr_frame_timer->start();
 
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &VideoRecorder::updateCameraList);
+    timer->start(500);
+
     capture_session.setVideoSink(ptr_video_sink);
     updateCameraList();
 
@@ -95,7 +99,11 @@ void VideoRecorder::updateCameraList()
         tab_camera_list.append(device.description());
     }
 
-    emit cameraListChanged();
+    if(tab_camera_list.size() != camera_list_size){
+        camera_list_size = tab_camera_list.size();
+        setCamera(0);
+        emit cameraListChanged();
+    }
 }
 
 void VideoRecorder::setCamera(int index)

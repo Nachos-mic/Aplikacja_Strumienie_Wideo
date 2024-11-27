@@ -88,6 +88,8 @@ private:
     bool is_video = false;
     bool filter_set = false;
 
+    int camera_list_size = 0;
+
 };
 
 #endif // VIDEORECORDER_H
