@@ -18,13 +18,30 @@ const std::vector<float>& Mask::getMask() {
     switch(chosen_mask) {
     case 1:
         mask = {
+            0.0625, 0.125, 0.0625,
+            0.125, 0.25, 0.125,
+            0.0625, 0.125, 0.0625
+
+        };
+        break;
+
+    case 2:
+        mask = {
+            0, -1, 0,
+            -1, 5, -1,
+            0, -1, 0
+        };
+        break;
+
+    case 3:
+        mask = {
             -1, -2, -1,
             0,  0,  0,
             1,  2,  1
         };
         break;
 
-    case 2:
+    case 4:
         mask = {
             -1, 0, 1,
             -2, 0, 2,
@@ -32,7 +49,7 @@ const std::vector<float>& Mask::getMask() {
         };
         break;
 
-    case 3:
+    case 5:
         mask = {
             -1, -1, -1,
             -1,  8, -1,
@@ -40,7 +57,7 @@ const std::vector<float>& Mask::getMask() {
         };
         break;
 
-    case 4:
+    case 6:
         mask = {
             -2, -1,  0,
             -1,  1,  1,
