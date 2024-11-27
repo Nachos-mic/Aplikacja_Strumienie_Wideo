@@ -52,7 +52,12 @@ QString VideoRecorder::getFrame() const
 
 void VideoRecorder::handleFrameChanged(const QVideoFrame &frame)
 {
-    last_frame = frame;
+
+    if(filter_set){
+        last_frame = Mask::applyMaskToFrame(frame);
+    }else{
+        last_frame = frame;
+    }
 }
 
 void VideoRecorder::updateFrame()
@@ -66,12 +71,6 @@ void VideoRecorder::updateFrame()
 
         if (image.isNull())
             return;
-
-        //Ustawianie filtra
-
-        if(filter_set){
-            image = Mask::applyMaskToFrame(image);
-        }
 
         QByteArray byte_arr;
         {
@@ -136,10 +135,6 @@ void VideoRecorder::captureFrame()
 
     if (image.isNull()) return;
 
-    if(filter_set){
-        image = Mask::applyMaskToFrame(image);
-    }
-
     QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
     QString filename = Utils::getMediaPath() + "/captured_img_" + timestamp + ".png";
 
@@ -164,8 +159,7 @@ bool VideoRecorder::configureMediaRecorder()
     return true;
 }
 
-void VideoRecorder::recordVideo(){
-
+void VideoRecorder::recordVideo() {
     if (last_frame.isValid()) {
         if (!last_frame.map(QVideoFrame::ReadOnly))
             return;
@@ -173,13 +167,9 @@ void VideoRecorder::recordVideo(){
         QImage image = last_frame.toImage();
         last_frame.unmap();
 
-        if (image.isNull())
-            return;
-
-        QVideoFrame video_frame(QVideoFrameFormat(image.size(),QVideoFrameFormat::Format_BGRA8888));
+        QVideoFrame video_frame(QVideoFrameFormat(image.size(), QVideoFrameFormat::Format_BGRA8888));
         video_frame.map(QVideoFrame::WriteOnly);
-        memcpy(video_frame.bits(0), image.constBits(),
-               image.sizeInBytes());
+        memcpy(video_frame.bits(0), image.constBits(), image.sizeInBytes());
         video_frame.unmap();
 
         capture_session.videoSink()->setVideoFrame(video_frame);

@@ -69,43 +69,48 @@ const std::vector<float>& Mask::getMask() {
     return mask;
 }
 
-QImage Mask::applyMaskToFrame(QImage &frame){
-
+QVideoFrame Mask::applyMaskToFrame(const QVideoFrame &input_frame) {
     qDebug() << "Mask is Applied";
 
-    QImage result = frame.copy();
+    QVideoFrame mod_frame = input_frame;
+
+    if (!mod_frame.map(QVideoFrame::ReadOnly))
+        return input_frame;
+
+    QImage frame = mod_frame.toImage();
+    mod_frame.unmap();
 
     QImage gray_image = frame.convertToFormat(QImage::Format_Grayscale8);
     const uchar *ptr_src = gray_image.constBits();
-    uchar *ptr_dst = result.bits();
-
     int width = frame.width();
     int height = frame.height();
     int offset = mask_size / 2;
+    const auto& mask = getMask();
 
-    const auto&  mask = getMask();
     std::vector<uchar> temp_buff(width * height);
 
-    for(int y = offset ; y < height ; ++y){
-        for(int x = offset ; x < width ; ++x){
-
+    for(int y = offset; y < height; ++y) {
+        for(int x = offset; x < width; ++x) {
             float sum = 0.0f;
-
             for (int i = -offset; i <= offset; ++i) {
                 for (int j = -offset; j <= offset; ++j) {
                     int x_src = x + j;
                     int y_src = y + i;
                     int index_mask = (i + offset) * mask_size + (j + offset);
-
                     sum += static_cast<float>(ptr_src[y_src * width + x_src]) * mask[index_mask];
                 }
             }
-
             sum = std::clamp(sum, 0.0f, 255.0f);
             temp_buff[y * width + x] = static_cast<uchar>(sum);
         }
     }
 
+    QVideoFrame result(QVideoFrameFormat(frame.size(), QVideoFrameFormat::Format_BGRA8888));
+
+    if (!result.map(QVideoFrame::WriteOnly))
+        return input_frame;
+
+    uchar *ptr_dst = result.bits(0);
     for (int i = 0; i < width * height; ++i) {
         ptr_dst[i * 4] = temp_buff[i];
         ptr_dst[i * 4 + 1] = temp_buff[i];
@@ -113,6 +118,7 @@ QImage Mask::applyMaskToFrame(QImage &frame){
         ptr_dst[i * 4 + 3] = 255;
     }
 
+    result.unmap();
     return result;
 }
 

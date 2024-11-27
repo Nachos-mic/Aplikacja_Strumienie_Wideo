@@ -65,18 +65,19 @@ private:
     void recordVideo();
 
     QMediaCaptureSession capture_session;
+    QMediaCaptureSession video_session;
 
     QString frame;
     QVideoFrame last_frame;
 
     QMediaRecorder* ptr_media_recorder;
-    QCamera *ptr_camera;
-    QVideoSink *ptr_video_sink;
+    QCamera* ptr_camera;
+    QVideoSink* ptr_video_sink;
 
-    QTimer *ptr_frame_timer;
+    QTimer* ptr_frame_timer;
     QFile* ptr_video_file;
 
-    QMediaPlayer *ptr_media_player;
+    QMediaPlayer*ptr_media_player;
     QVideoSink* ptr_video_player_sink;
 
     QStringList tab_camera_list;

@@ -17,7 +17,7 @@ public:
     ~Mask();
 
 public slots:
-    static QImage applyMaskToFrame(QImage &frame);
+    static QVideoFrame applyMaskToFrame(const QVideoFrame &frame);
     static void setFilterMask(int index){chosen_mask = index;};
 
 private:
