@@ -56,12 +56,7 @@ QString VideoRecorder::getFrame() const
 
 void VideoRecorder::handleFrameChanged(const QVideoFrame &frame)
 {
-
-    if(filter_set){
-        last_frame = Mask::applyMaskToFrame(frame);
-    }else{
-        last_frame = frame;
-    }
+    last_frame = filter_set ?  Mask::applyMaskToFrame(frame) : frame;
 }
 
 void VideoRecorder::updateFrame()
@@ -80,7 +75,7 @@ void VideoRecorder::updateFrame()
         {
             QBuffer buffer(&byte_arr);
             if (buffer.open(QIODevice::WriteOnly)) {
-                image.save(&buffer, "JPEG", 25);
+                image.save(&buffer, "JPEG", 15);
             }
         }
 
@@ -167,22 +162,22 @@ bool VideoRecorder::configureMediaRecorder()
     return true;
 }
 
-void VideoRecorder::recordVideo() {
-    if (last_frame.isValid()) {
-        if (!last_frame.map(QVideoFrame::ReadOnly))
-            return;
+// void VideoRecorder::recordVideo() {
+//     if (last_frame.isValid()) {
+//         if (!last_frame.map(QVideoFrame::ReadOnly))
+//             return;
 
-        QImage image = last_frame.toImage();
-        last_frame.unmap();
+//         QImage image = last_frame.toImage();
+//         last_frame.unmap();
 
-        QVideoFrame video_frame(QVideoFrameFormat(image.size(), QVideoFrameFormat::Format_BGRA8888));
-        video_frame.map(QVideoFrame::WriteOnly);
-        memcpy(video_frame.bits(0), image.constBits(), image.sizeInBytes());
-        video_frame.unmap();
+//         QVideoFrame video_frame(QVideoFrameFormat(image.size(), QVideoFrameFormat::Format_BGRA8888));
+//         video_frame.map(QVideoFrame::WriteOnly);
+//         memcpy(video_frame.bits(0), image.constBits(), image.sizeInBytes());
+//         video_frame.unmap();
 
-        capture_session.videoSink()->setVideoFrame(video_frame);
-    }
-}
+//         capture_session.videoSink()->setVideoFrame(video_frame);
+//     }
+// }
 
 void VideoRecorder::startStopRecording()
 {
@@ -195,7 +190,6 @@ void VideoRecorder::startStopRecording()
         QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
         QString filename = Utils::getMediaPath() + "/video_" + timestamp + ".mp4";
         ptr_media_recorder->setOutputLocation(QUrl::fromLocalFile(filename));
-
         qDebug() << "Recording to: " << filename;
         ptr_media_recorder->record();
         is_recording = true;
@@ -206,6 +200,8 @@ void VideoRecorder::startStopRecording()
 void VideoRecorder::playVideo(QString path){
 
     if(is_video == false){
+
+        filter_set = false;
 
         if (ptr_camera) {
             ptr_camera->stop();

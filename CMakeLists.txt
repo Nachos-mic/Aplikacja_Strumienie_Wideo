@@ -9,6 +9,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS
     Core
     Widgets
@@ -21,6 +22,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     Multimedia
     MultimediaWidgets
 )
+
+set(OpenCV_DIR "C:/opencv/build_mingw")
+find_package(OpenCV REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -60,7 +64,23 @@ target_link_libraries(VideoRecorder_Widgets PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Multimedia
     Qt${QT_VERSION_MAJOR}::MultimediaWidgets
+    ${OpenCV_LIBS}
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${OpenCV_INCLUDE_DIRS}
+)
+
+if(WIN32)
+    file(GLOB OpenCV_DLLS "${OpenCV_DIR}/bin/*.dll")
+    foreach(OpenCV_DLL ${OpenCV_DLLS})
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${OpenCV_DLL}
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        )
+    endforeach()
+endif()
 
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

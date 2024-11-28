@@ -17,6 +17,7 @@
 #include <QMediaFormat>
 #include <QUrl>
 #include <QMediaPlayer>
+#include <opencv2/opencv.hpp>
 
 #include "utils.h"
 #include "mask.h"
@@ -62,7 +63,7 @@ private slots:
 private:
     void updateCameraList();
     bool configureMediaRecorder();
-    void recordVideo();
+    // void recordVideo();
 
     QMediaCaptureSession capture_session;
     QMediaCaptureSession video_session;
