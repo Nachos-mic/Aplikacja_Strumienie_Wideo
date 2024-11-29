@@ -1,22 +1,13 @@
 #include "videorecorder.h"
+#include "mask.h"
 
 VideoRecorder::VideoRecorder(QObject *parent)
     : QObject(parent)
     , ptr_camera(nullptr)
     , ptr_video_sink(new QVideoSink(this))
     , ptr_frame_timer(new QTimer(this))
-    , ptr_media_recorder(new QMediaRecorder(this))
     , is_recording(false)
 {
-    connect(ptr_media_recorder, &QMediaRecorder::errorOccurred,
-            this, [this](QMediaRecorder::Error error, const QString &errorString) {
-                qDebug() << "Recording error:" << error << errorString;
-            });
-
-    connect(ptr_media_recorder, &QMediaRecorder::recorderStateChanged,
-            this, [this](QMediaRecorder::RecorderState state) {
-                qDebug() << "Recorder state changed to:" << state;
-            });
 
     connect(ptr_video_sink, &QVideoSink::videoFrameChanged,
             this, &VideoRecorder::handleFrameChanged);
@@ -37,7 +28,6 @@ VideoRecorder::VideoRecorder(QObject *parent)
         capture_session.setCamera(ptr_camera);
         ptr_camera->start();
     }
-    configureMediaRecorder();
 }
 
 VideoRecorder::~VideoRecorder()
@@ -148,19 +138,6 @@ void VideoRecorder::captureFrame()
     }
 }
 
-bool VideoRecorder::configureMediaRecorder()
-{
-    QMediaFormat format;
-    format.setFileFormat(QMediaFormat::MPEG4);
-    format.setVideoCodec(QMediaFormat::VideoCodec::H264);
-
-    ptr_media_recorder->setMediaFormat(format);
-    ptr_media_recorder->setQuality(QMediaRecorder::HighQuality);
-    ptr_media_recorder->setVideoFrameRate(30.0);
-    capture_session.setRecorder(ptr_media_recorder);
-
-    return true;
-}
 
 
 void VideoRecorder::startStopRecording() {

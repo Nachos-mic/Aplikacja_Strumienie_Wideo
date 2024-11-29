@@ -54,7 +54,6 @@ public slots:
     void setMask(int index);
     void captureFrame();
     void startStopRecording();
-    // void changeFilterState();
 
 signals:
     void cameraListChanged();
@@ -68,8 +67,6 @@ private slots:
 
 private:
     void updateCameraList();
-    bool configureMediaRecorder();
-    // void recordVideo();
 
     QMediaCaptureSession capture_session;
     QMediaCaptureSession video_session;
