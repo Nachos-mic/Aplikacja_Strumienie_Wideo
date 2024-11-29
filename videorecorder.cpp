@@ -179,22 +179,53 @@ bool VideoRecorder::configureMediaRecorder()
 //     }
 // }
 
-void VideoRecorder::startStopRecording()
-{
+void VideoRecorder::startStopRecording() {
+
     if (is_recording) {
-        qDebug() << "Stopped Recording";
-        ptr_media_recorder->stop();
         is_recording = false;
+        writer.release();
         emit recordingStatusChanged(false);
-    } else {
-        QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
-        QString filename = Utils::getMediaPath() + "/video_" + timestamp + ".mp4";
-        ptr_media_recorder->setOutputLocation(QUrl::fromLocalFile(filename));
-        qDebug() << "Recording to: " << filename;
-        ptr_media_recorder->record();
-        is_recording = true;
-        emit recordingStatusChanged(true);
+        qDebug() << "Stopped Recording";
+        return;
     }
+
+    qDebug() << "Started Recording";
+
+    QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
+    QString filename = Utils::getMediaPath() + "/video_" + timestamp + ".mp4";
+
+    if (!writer.open(filename.toStdString(),cv::VideoWriter::fourcc('m','p','4','v'),fps,cv::Size(last_frame.width(), last_frame.height()),true)) {
+        qDebug() << "Failed to open video writer";
+        return;
+    }
+
+    is_recording = true;
+    emit recordingStatusChanged(true);
+
+    //Obniżenie fps w wypadku nałożenia filtracji
+
+    fps = filter_set ? 20 : fps;
+
+    //Osobny wątek do nagrywania wideo (bez tego , program się posypie)
+
+    QThread* recordingThread = QThread::create([this]() {
+        while (is_recording && last_frame.isValid()) {
+            QImage image = last_frame.toImage();
+            if (image.format() != QImage::Format_RGB888) {
+                image = image.convertToFormat(QImage::Format_RGB888);
+            }
+
+            cv::Mat mat(image.height(),image.width(),CV_8UC3,const_cast<uchar*>(image.bits()),image.bytesPerLine());
+
+            // cv::Mat bgrMat;
+            // cv::cvtColor(mat, bgrMat, cv::COLOR_RGB2BGR);
+            writer.write(mat);
+
+            QThread::msleep(1000/fps);
+        }
+    });
+
+    recordingThread->start();
 }
 
 void VideoRecorder::playVideo(QString path){

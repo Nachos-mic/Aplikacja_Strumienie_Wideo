@@ -81,20 +81,31 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::updateFrame(const QString& frameData)
+void MainWindow::updateFrame(const QString& frame)
 {
-    QString base64Data = frameData.mid(frameData.indexOf(',') + 1);
-    QByteArray imageData = QByteArray::fromBase64(base64Data.toLatin1());
+    QString base64_frame = frame.mid(frame.indexOf(',') + 1);
+    QByteArray image_frame = QByteArray::fromBase64(base64_frame.toLatin1());
     QPixmap pixmap;
-    pixmap.loadFromData(imageData);
+    pixmap.loadFromData(image_frame);
 
     ui->label->setPixmap(pixmap.scaled(ui->label->size(),
                                        Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
-void MainWindow::updateRecordingStatus(bool isRecording)
+void MainWindow::updateRecordingStatus(bool is_recording)
 {
-    ui->captureVideoButton->setText(isRecording ? "Stop Recording" : "Capture Video");
+
+    ui->captureVideoButton->setText(is_recording ? "Stop Recording" : "Capture Video");
+
+    if(is_recording){
+        ui->cameraComboBox->setEnabled(false);
+        ui->filterComboBox->setEnabled(false);
+        ui->playVideoButton->setEnabled(false);
+    }else{
+        ui->cameraComboBox->setEnabled(true);
+        ui->filterComboBox->setEnabled(true);
+        ui->playVideoButton->setEnabled(true);
+    }
 }
 
 void MainWindow::updateCameraList()

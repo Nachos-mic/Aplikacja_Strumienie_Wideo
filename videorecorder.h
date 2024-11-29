@@ -17,6 +17,9 @@
 #include <QMediaFormat>
 #include <QUrl>
 #include <QMediaPlayer>
+#include <QString>
+#include <QThread>
+
 #include <opencv2/opencv.hpp>
 
 #include "utils.h"
@@ -37,6 +40,9 @@ public:
     QString getCurrentPath() const { return Utils::getMediaPath(); }
     void setCurrentPath(const QString &path) {qDebug() << path; Utils::setMediaPath(path);};
     void playVideo(const QString path);
+
+    bool getRecordingState(){return is_recording;};
+    void setRecordingState(bool state){is_recording = state;};
 
     bool getPlayerState(){return is_video;};
     void setPlayerState(bool state){is_video = state;};
@@ -78,18 +84,21 @@ private:
     QTimer* ptr_frame_timer;
     QFile* ptr_video_file;
 
-    QMediaPlayer*ptr_media_player;
+    QMediaPlayer* ptr_media_player;
     QVideoSink* ptr_video_player_sink;
 
     QStringList tab_camera_list;
     QList<QCameraDevice> tab_camera_devices;
     QStringList tab_mask_list = {"None" , "Blur" , "Sharpen" , "Left Sobel" , "Right Sobel" , "Outline","Emboss"  };
 
-    bool is_recording = true;
+    bool is_recording = false;
     bool is_video = false;
     bool filter_set = false;
 
+    cv::VideoWriter writer;
     int camera_list_size = 0;
+
+    double fps = 30.0;
 
 };
 
