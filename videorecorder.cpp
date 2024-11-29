@@ -178,9 +178,9 @@ void VideoRecorder::startStopRecording() {
 
             cv::Mat mat(image.height(),image.width(),CV_8UC3,const_cast<uchar*>(image.bits()),image.bytesPerLine());
 
-            // cv::Mat bgrMat;
-            // cv::cvtColor(mat, bgrMat, cv::COLOR_RGB2BGR);
-            writer.write(mat);
+            cv::Mat corr_mat;
+            cv::cvtColor(mat, corr_mat, cv::COLOR_RGB2BGR);
+            writer.write(corr_mat);
 
             QThread::msleep(1000/fps);
         }

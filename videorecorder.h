@@ -23,7 +23,6 @@
 #include <opencv2/opencv.hpp>
 
 #include "utils.h"
-#include "mask.h"
 
 class VideoRecorder : public QObject
 {
