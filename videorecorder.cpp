@@ -75,7 +75,7 @@ void VideoRecorder::updateFrame()
         {
             QBuffer buffer(&byte_arr);
             if (buffer.open(QIODevice::WriteOnly)) {
-                image.save(&buffer, "JPEG", 15);
+                image.save(&buffer, "JPEG", 30);
             }
         }
 
@@ -162,22 +162,6 @@ bool VideoRecorder::configureMediaRecorder()
     return true;
 }
 
-// void VideoRecorder::recordVideo() {
-//     if (last_frame.isValid()) {
-//         if (!last_frame.map(QVideoFrame::ReadOnly))
-//             return;
-
-//         QImage image = last_frame.toImage();
-//         last_frame.unmap();
-
-//         QVideoFrame video_frame(QVideoFrameFormat(image.size(), QVideoFrameFormat::Format_BGRA8888));
-//         video_frame.map(QVideoFrame::WriteOnly);
-//         memcpy(video_frame.bits(0), image.constBits(), image.sizeInBytes());
-//         video_frame.unmap();
-
-//         capture_session.videoSink()->setVideoFrame(video_frame);
-//     }
-// }
 
 void VideoRecorder::startStopRecording() {
 
@@ -288,16 +272,6 @@ void VideoRecorder::playVideo(QString path){
         }
     }
 }
-
-
-// void VideoRecorder::changeFilterState(){
-//     if(filter_set){
-//         filter_set = false;
-//         qDebug() << "Stopped Filtering";
-//     }else{
-//         filter_set = true;
-//     }
-// }
 
 void VideoRecorder::setMask(int index){
     if(index > 0){
