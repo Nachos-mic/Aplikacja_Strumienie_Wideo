@@ -9,22 +9,11 @@
 #include <stdio.h>
 #include <memory>
 
-class Mask : public QObject
-{
-    Q_OBJECT
-public:
-    explicit Mask(QObject *parent = nullptr);
-    ~Mask();
 
-public slots:
-    static QVideoFrame applyMaskToFrame(const QVideoFrame &frame);
-    static void setFilterMask(int index){chosen_mask = index;};
+extern std::vector<float> mask;
 
-private:
-    static const std::vector<float>& getMask();
-    static const int getFilterMask(){return chosen_mask;};
+QVideoFrame applyMaskToFrame(const QVideoFrame &frame);
+void setFilterMask(int index);
 
-   static inline int chosen_mask = 0;
-};
 
 #endif // MASK_H

@@ -2,73 +2,61 @@
 
 #define mask_size 3
 
-Mask::Mask(QObject *parent)
-{
+std::vector<float> mask;
 
+void setFilterMask(int index){
+    switch(index) {
+            case 1:
+                mask = {
+                    0.015625, 0.0625, 0.015625,
+                    0.0625, 0.6875, 0.0625,
+                    0.015625, 0.0625, 0.015625
+                };
+                break;
 
+            case 2:
+                mask = {
+                    0, -1, 0,
+                    -1, 5, -1,
+                    0, -1, 0
+                };
+                break;
 
+            case 3:
+                mask = {
+                    -1, -2, -1,
+                    0,  0,  0,
+                    1,  2,  1
+                };
+                break;
+
+            case 4:
+                mask = {
+                    -1, 0, 1,
+                    -2, 0, 2,
+                    -1, 0, 1
+                };
+                break;
+
+            case 5:
+                mask = {
+                    -1, -1, -1,
+                    -1,  8, -1,
+                    -1, -1, -1
+                };
+                break;
+
+            case 6:
+                mask = {
+                    -2, -1,  0,
+                    -1,  1,  1,
+                    0,  1,  2
+                };
+                break;
+            }
 }
 
-Mask::~Mask(){
-
-}
-
-const std::vector<float>& Mask::getMask() {
-    static std::vector<float> mask;
-    switch(chosen_mask) {
-    case 1:
-        mask = {
-            0.015625, 0.0625, 0.015625,
-            0.0625, 0.6875, 0.0625,
-            0.015625, 0.0625, 0.015625
-        };
-        break;
-
-    case 2:
-        mask = {
-            0, -1, 0,
-            -1, 5, -1,
-            0, -1, 0
-        };
-        break;
-
-    case 3:
-        mask = {
-            -1, -2, -1,
-            0,  0,  0,
-            1,  2,  1
-        };
-        break;
-
-    case 4:
-        mask = {
-            -1, 0, 1,
-            -2, 0, 2,
-            -1, 0, 1
-        };
-        break;
-
-    case 5:
-        mask = {
-            -1, -1, -1,
-            -1,  8, -1,
-            -1, -1, -1
-        };
-        break;
-
-    case 6:
-        mask = {
-            -2, -1,  0,
-            -1,  1,  1,
-            0,  1,  2
-        };
-        break;
-    }
-
-    return mask;
-}
-
-QVideoFrame Mask::applyMaskToFrame(const QVideoFrame &input_frame) {
+QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
     qDebug() << "Mask is Applied";
 
     QVideoFrame mod_frame = input_frame;
@@ -84,7 +72,6 @@ QVideoFrame Mask::applyMaskToFrame(const QVideoFrame &input_frame) {
     int width = frame.width();
     int height = frame.height();
     int offset = mask_size / 2;
-    const auto& mask = getMask();
 
     std::vector<uchar> temp_buff(width * height);
 

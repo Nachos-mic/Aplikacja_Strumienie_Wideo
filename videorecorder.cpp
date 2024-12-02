@@ -46,7 +46,7 @@ QString VideoRecorder::getFrame() const
 
 void VideoRecorder::handleFrameChanged(const QVideoFrame &frame)
 {
-    last_frame = filter_set ?  Mask::applyMaskToFrame(frame) : frame;
+    last_frame = filter_set ?  applyMaskToFrame(frame) : frame;
 }
 
 void VideoRecorder::updateFrame()
@@ -165,7 +165,7 @@ void VideoRecorder::startStopRecording() {
 
     //Obniżenie fps w wypadku nałożenia filtracji
 
-    fps = filter_set ? 20 : fps;
+    fps = filter_set ? 25 : fps;
 
     //Osobny wątek do nagrywania wideo (bez tego , program się posypie)
 
@@ -253,7 +253,7 @@ void VideoRecorder::playVideo(QString path){
 void VideoRecorder::setMask(int index){
     if(index > 0){
         filter_set = true;
-        Mask::setFilterMask(index);
+        setFilterMask(index);
     }else{
         filter_set = false;
     }
