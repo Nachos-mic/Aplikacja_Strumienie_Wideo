@@ -8,7 +8,6 @@ VideoRecorder::VideoRecorder(QObject *parent)
     , ptr_frame_timer(new QTimer(this))
     , is_recording(false)
 {
-
     connect(ptr_video_sink, &QVideoSink::videoFrameChanged,
             this, &VideoRecorder::handleFrameChanged);
 
@@ -24,9 +23,7 @@ VideoRecorder::VideoRecorder(QObject *parent)
     updateCameraList();
 
     if (!tab_camera_devices.isEmpty()) {
-        ptr_camera = new QCamera(tab_camera_devices.first(), this);
-        capture_session.setCamera(ptr_camera);
-        ptr_camera->start();
+        setCamera(0);
     }
 }
 
@@ -99,7 +96,25 @@ void VideoRecorder::setCamera(int index)
             delete ptr_camera;
         }
 
+       //Ustawianie rozdzielczości kamery dla filtracji
+
+        QList<QCameraFormat> camera_formats = tab_camera_devices.at(index).videoFormats();
+
+        QCameraFormat selected_format;
+
+        for (const QCameraFormat &format : camera_formats) {
+            if (format.resolution().width() == 640 &&
+                format.resolution().height() == 480) {
+                selected_format = format;
+                qDebug() << format.resolution();
+                break;
+            }
+        }
+
         ptr_camera = new QCamera(tab_camera_devices.at(index), this);
+
+        ptr_camera->setCameraFormat(selected_format);
+
         capture_session.setCamera(ptr_camera);
 
         QTimer::singleShot(100, this, [this]() {
