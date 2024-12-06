@@ -85,7 +85,7 @@ private:
 
     QStringList tab_camera_list;
     QList<QCameraDevice> tab_camera_devices;
-    QStringList tab_mask_list = {"None" , "Blur" , "Sharpen" , "Left Sobel" , "Right Sobel" , "Outline","Emboss"  };
+    QStringList tab_mask_list = {"None" , "Blur" , "Sharpen" , "Sobel" , "90* Prewitt" , "Outline","Emboss"  };
 
     bool is_recording = false;
     bool is_video = false;

@@ -6,54 +6,55 @@ std::vector<float> mask;
 
 void setFilterMask(int index){
     switch(index) {
-            case 1:
-                mask = {
-                    0.015625, 0.0625, 0.015625,
-                    0.0625, 0.6875, 0.0625,
-                    0.015625, 0.0625, 0.015625
-                };
-                break;
 
-            case 2:
-                mask = {
-                    0, -1, 0,
-                    -1, 5, -1,
-                    0, -1, 0
-                };
-                break;
+    case 1:
+        mask = {
+            0.015625, 0.0625, 0.015625,
+            0.0625, 0.6875, 0.0625,
+            0.015625, 0.0625, 0.015625
+        };
+        break;
 
-            case 3:
-                mask = {
-                    -1, -2, -1,
-                    0,  0,  0,
-                    1,  2,  1
-                };
-                break;
+    case 2:
+        mask = {
+            0, -1, 0,
+            -1, 5, -1,
+            0, -1, 0
+        };
+        break;
 
-            case 4:
-                mask = {
-                    -1, 0, 1,
-                    -2, 0, 2,
-                    -1, 0, 1
-                };
-                break;
+    case 3:
+        mask = {
+            -1, -2, -1,
+            0,  0,  0,
+            1,  2,  1
+        };
+        break;
 
-            case 5:
-                mask = {
-                    -1, -1, -1,
-                    -1,  8, -1,
-                    -1, -1, -1
-                };
-                break;
+    case 4:
+        mask = {
+            -1, 0, 1,
+            -1, 0, 1,
+            -1, 0, 1
+        };
+        break;
 
-            case 6:
-                mask = {
-                    -2, -1,  0,
-                    -1,  1,  1,
-                    0,  1,  2
-                };
-                break;
-            }
+    case 5:
+        mask = {
+            -1, -1, -1,
+            -1,  8, -1,
+            -1, -1, -1
+        };
+        break;
+
+    case 6:
+        mask = {
+            -2, -1,  0,
+            -1,  1,  1,
+            0,  1,  2
+        };
+        break;
+    }
 }
 
 QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
