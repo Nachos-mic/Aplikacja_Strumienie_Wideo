@@ -8,6 +8,8 @@ VideoRecorder::VideoRecorder(QObject *parent)
     , ptr_frame_timer(new QTimer(this))
     , is_recording(false)
 {
+    //Podłączenie metod dotyczących klatek wideo do wykrytej zmiany klatki wideo przez QVideoSink::videoFrameChanged
+
     connect(ptr_video_sink, &QVideoSink::videoFrameChanged,
             this, &VideoRecorder::handleFrameChanged);
 
@@ -15,9 +17,13 @@ VideoRecorder::VideoRecorder(QObject *parent)
     connect(ptr_frame_timer, &QTimer::timeout, this, &VideoRecorder::updateFrame);
     ptr_frame_timer->start();
 
+    //Podłączenie metody do aktualizacji listy kamer
+
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &VideoRecorder::updateCameraList);
     timer->start(500);
+
+    //Ustawianie captureSession do pokazywania feedu z kamery
 
     capture_session.setVideoSink(ptr_video_sink);
     updateCameraList();
@@ -62,7 +68,7 @@ void VideoRecorder::updateFrame()
         {
             QBuffer buffer(&byte_arr);
             if (buffer.open(QIODevice::WriteOnly)) {
-                image.save(&buffer, "JPEG", 40);
+                image.save(&buffer, "JPEG", 85);
             }
         }
 
@@ -96,7 +102,9 @@ void VideoRecorder::setCamera(int index)
             delete ptr_camera;
         }
 
-       //Ustawianie rozdzielczości kamery dla filtracji
+        ptr_frame_timer->stop();
+
+       //Ustawianie rozdzielczości kamery.
 
         QList<QCameraFormat> camera_formats = tab_camera_devices.at(index).videoFormats();
 
@@ -117,13 +125,16 @@ void VideoRecorder::setCamera(int index)
 
         capture_session.setCamera(ptr_camera);
 
+        //Uruchamianie kamery
+
         QTimer::singleShot(100, this, [this]() {
             if (ptr_camera) {
                 ptr_camera->start();
             }
         });
 
-        ptr_frame_timer->stop();
+        //Uruchamianie obsługi klatek na nowo
+
         QTimer::singleShot(200, this, [this]() {
             ptr_frame_timer->start();
         });
@@ -135,11 +146,7 @@ void VideoRecorder::captureFrame()
 {
     if (!last_frame.isValid()) return;
 
-    QVideoFrame frame = last_frame;
-    if (!frame.map(QVideoFrame::ReadOnly)) return;
-
-    QImage image = frame.toImage();
-    frame.unmap();
+    QImage image = last_frame.toImage();
 
     if (image.isNull()) return;
 
@@ -184,7 +191,7 @@ void VideoRecorder::startStopRecording() {
 
     //Osobny wątek do nagrywania wideo (bez tego , program się posypie)
 
-    QThread* recordingThread = QThread::create([this]() {
+    QThread* recording_thread = QThread::create([this]() {
         while (is_recording && last_frame.isValid()) {
             QImage image = last_frame.toImage();
             if (image.format() != QImage::Format_RGB888) {
@@ -201,7 +208,7 @@ void VideoRecorder::startStopRecording() {
         }
     });
 
-    recordingThread->start();
+    recording_thread->start();
 }
 
 void VideoRecorder::playVideo(QString path){
@@ -237,14 +244,30 @@ void VideoRecorder::playVideo(QString path){
                     QByteArray byte_arr;
                     QBuffer buffer(&byte_arr);
                     if (buffer.open(QIODevice::WriteOnly)) {
-                        image.save(&buffer, "JPEG", 25);
+                        image.save(&buffer, "JPEG", 85);
                     }
 
-                    QString new_frame = QString("data:image/jpeg;base64,%1")
-                                            .arg(QString::fromLatin1(byte_arr.toBase64()));
+                    QString new_frame = QString("data:image/jpeg;base64,%1").arg(QString::fromLatin1(byte_arr.toBase64()));
                     this->frame = new_frame;
                     emit frameChanged(this->frame);
                 });
+
+        connect(ptr_media_player, &QMediaPlayer::mediaStatusChanged, this, [this](QMediaPlayer::MediaStatus status) {
+            if (status == QMediaPlayer::EndOfMedia) {
+                ptr_media_player->stop();
+                is_video = false;
+                ptr_media_player->setVideoSink(nullptr);
+                delete ptr_media_player;
+                ptr_media_player = nullptr;
+
+                if (ptr_camera) {
+                    ptr_camera->start();
+                    ptr_frame_timer->start();
+                }
+
+                emit setPlayerFalse();
+            }
+        });
 
         is_video = true;
         ptr_media_player->setSource(QUrl::fromLocalFile(path));

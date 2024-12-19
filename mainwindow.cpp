@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(videoRecorder, &VideoRecorder::cameraListChanged,
             this, &MainWindow::updateCameraList);
 
+    connect(videoRecorder, &VideoRecorder::setPlayerFalse,
+            this, &MainWindow::setPlayerOff);
+
     connect(ui->cameraComboBox,
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             videoRecorder, &VideoRecorder::setCamera);
@@ -38,9 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->setPathButton, &QPushButton::clicked,
             this, [this]() {
-                QString dir = QFileDialog::getExistingDirectory(this,
-                                                                "Select Directory",
-                                                                videoRecorder->getCurrentPath());
+                QString dir = QFileDialog::getExistingDirectory(this, "Select Directory", videoRecorder->getCurrentPath());
+
                 if (!dir.isEmpty()) {
                     videoRecorder->setCurrentPath(dir);
                 }
@@ -89,8 +91,7 @@ void MainWindow::updateFrame(const QString& frame)
     QPixmap pixmap;
     pixmap.loadFromData(image_frame);
 
-    ui->label->setPixmap(pixmap.scaled(ui->label->size(),
-                                       Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->label->setPixmap(pixmap.scaled(ui->label->size(),Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void MainWindow::updateRecordingStatus(bool is_recording)
@@ -107,6 +108,15 @@ void MainWindow::updateRecordingStatus(bool is_recording)
         ui->filterComboBox->setEnabled(true);
         ui->playVideoButton->setEnabled(true);
     }
+}
+
+void MainWindow::setPlayerOff()
+{
+    ui->cameraComboBox->setEnabled(true);
+    ui->captureFrameButton->setEnabled(true);
+    ui->captureVideoButton->setEnabled(true);
+    ui->filterComboBox->setEnabled(true);
+    ui->playVideoButton->setText("Play Video");
 }
 
 void MainWindow::updateCameraList()

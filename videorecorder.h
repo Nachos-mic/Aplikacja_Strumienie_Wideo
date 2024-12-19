@@ -58,6 +58,7 @@ signals:
     void cameraListChanged();
     void frameChanged(const QString& frame);
     void recordingStatusChanged(bool is_recording);
+    void setPlayerFalse();
 
 
 private slots:
