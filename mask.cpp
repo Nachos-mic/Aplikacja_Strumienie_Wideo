@@ -59,50 +59,59 @@ void setFilterMask(int index){
 
 QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
     qDebug() << "Mask is Applied";
-
     QVideoFrame mod_frame = input_frame;
-
     if (!mod_frame.map(QVideoFrame::ReadOnly))
         return input_frame;
-
     QImage frame = mod_frame.toImage();
     mod_frame.unmap();
 
-    QImage gray_image = frame.convertToFormat(QImage::Format_Grayscale8);
-    const uchar *ptr_src = gray_image.constBits();
     int width = frame.width();
     int height = frame.height();
     int offset = mask_size / 2;
 
-    std::vector<uchar> temp_buff(width * height);
+    std::vector<uchar> temp_buff_r(width * height);
+    std::vector<uchar> temp_buff_g(width * height);
+    std::vector<uchar> temp_buff_b(width * height);
 
-    for(int y = offset; y < height; ++y) {
-        for(int x = offset; x < width; ++x) {
-            float sum = 0.0f;
+    QImage rgb_image = frame.convertToFormat(QImage::Format_RGB888);
+    const uchar *ptr_src = rgb_image.constBits();
+
+    for(int y = offset; y < height - offset; ++y) {
+        for(int x = offset; x < width - offset; ++x) {
+            float sum_r = 0.0f;
+            float sum_g = 0.0f;
+            float sum_b = 0.0f;
+
             for (int i = -offset; i <= offset; ++i) {
                 for (int j = -offset; j <= offset; ++j) {
                     int x_src = x + j;
                     int y_src = y + i;
+                    int src_pixel = (y_src * width + x_src) * 3;  // 3 kanały koloru
                     int index_mask = (i + offset) * mask_size + (j + offset);
-                    sum += static_cast<float>(ptr_src[y_src * width + x_src]) * mask[index_mask];
+
+                    sum_r += static_cast<float>(ptr_src[src_pixel]) * mask[index_mask];
+                    sum_g += static_cast<float>(ptr_src[src_pixel + 1]) * mask[index_mask];
+                    sum_b += static_cast<float>(ptr_src[src_pixel + 2]) * mask[index_mask];
                 }
             }
-            sum = std::clamp(sum, 0.0f, 255.0f);
-            temp_buff[y * width + x] = static_cast<uchar>(sum);
+
+            int pixel_pos = y * width + x;
+            temp_buff_r[pixel_pos] = static_cast<uchar>(std::clamp(sum_r, 0.0f, 255.0f));
+            temp_buff_g[pixel_pos] = static_cast<uchar>(std::clamp(sum_g, 0.0f, 255.0f));
+            temp_buff_b[pixel_pos] = static_cast<uchar>(std::clamp(sum_b, 0.0f, 255.0f));
         }
     }
 
     QVideoFrame result(QVideoFrameFormat(frame.size(), QVideoFrameFormat::Format_BGRA8888));
-
     if (!result.map(QVideoFrame::WriteOnly))
         return input_frame;
 
     uchar *ptr_dst = result.bits(0);
     for (int i = 0; i < width * height; ++i) {
-        ptr_dst[i * 4] = temp_buff[i];
-        ptr_dst[i * 4 + 1] = temp_buff[i];
-        ptr_dst[i * 4 + 2] = temp_buff[i];
-        ptr_dst[i * 4 + 3] = 255;
+        ptr_dst[i * 4] = temp_buff_b[i];     // B
+        ptr_dst[i * 4 + 1] = temp_buff_g[i]; // G
+        ptr_dst[i * 4 + 2] = temp_buff_r[i]; // R
+        ptr_dst[i * 4 + 3] = 255;            // A
     }
 
     result.unmap();

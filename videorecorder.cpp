@@ -68,7 +68,7 @@ void VideoRecorder::updateFrame()
         {
             QBuffer buffer(&byte_arr);
             if (buffer.open(QIODevice::WriteOnly)) {
-                image.save(&buffer, "JPEG", 85);
+                image.save(&buffer, "JPEG", 30);
             }
         }
 
