@@ -67,6 +67,9 @@
    <addaction name="setPathButton"/>
   </widget>
   <action name="captureFrameButton">
+   <property name="icon">
+    <iconset theme="applications-development"/>
+   </property>
    <property name="text">
     <string>Capture Frame</string>
    </property>
