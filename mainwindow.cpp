@@ -11,9 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->toolBar->addWidget(cameraComboBox);
     ui->toolBar->addWidget(filterComboBox);
-    ui->toolBar->setStyleSheet("QToolButton {border-style: outset; width: 100px; border-width: 1px; border-radius: 4px; border-color: black; margin-right: 3px; }");
-
-    QString box_style_settings = "QComboBox { border: 1px solid gray; border-radius: 3px; padding: 1px 1px 1px 1px; min-width: 6em ; margin-right: 3px;}";
+    ui->toolBar->setStyleSheet("QWidget { background : lightgrey; }" + toolButtons_style_settings);
 
     cameraComboBox->setStyleSheet(box_style_settings);
     filterComboBox->setStyleSheet(box_style_settings);
