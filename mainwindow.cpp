@@ -9,8 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
-    ui->cameraComboBox->addItems(videoRecorder->getCameraList());
-    ui->filterComboBox->addItems(videoRecorder->getMaskList());
+    ui->toolBar->addWidget(cameraComboBox);
+    ui->toolBar->addWidget(filterComboBox);
+
+    cameraComboBox->addItems(videoRecorder->getCameraList());
+    filterComboBox->addItems(videoRecorder->getMaskList());
 
 
     connect(videoRecorder, &VideoRecorder::frameChanged,
@@ -25,21 +28,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(videoRecorder, &VideoRecorder::setPlayerFalse,
             this, &MainWindow::setPlayerOff);
 
-    connect(ui->cameraComboBox,
+    connect(cameraComboBox,
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             videoRecorder, &VideoRecorder::setCamera);
 
-    connect(ui->captureFrameButton, &QPushButton::clicked,
+    connect(ui->captureFrameButton, &QAction::triggered,
             videoRecorder, &VideoRecorder::captureFrame);
 
-    connect(ui->captureVideoButton, &QPushButton::clicked,
+    connect(ui->captureVideoButton, &QAction::triggered,
             videoRecorder, &VideoRecorder::startStopRecording);
 
-    connect(ui->filterComboBox,
+    connect(filterComboBox,
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             videoRecorder, &VideoRecorder::setMask);
 
-    connect(ui->setPathButton, &QPushButton::clicked,
+    connect(ui->setPathButton, &QAction::triggered,
             this, [this]() {
                 QString dir = QFileDialog::getExistingDirectory(this, "Select Directory", videoRecorder->getCurrentPath());
 
@@ -48,30 +51,30 @@ MainWindow::MainWindow(QWidget *parent)
                 }
             });
 
-    connect(ui->playVideoButton, &QPushButton::clicked,
+    connect(ui->playVideoButton, &QAction::triggered,
             this, [this]() {
                 if(videoRecorder->getPlayerState() == false){
 
                     QString file = QFileDialog::getOpenFileName(this,"Select Directory",videoRecorder->getCurrentPath());
                     if (!file.isEmpty()) {
                         videoRecorder->playVideo(file);
-                        ui->cameraComboBox->setEnabled(false);
+                        cameraComboBox->setEnabled(false);
                         ui->captureFrameButton->setEnabled(false);
                         ui->captureVideoButton->setEnabled(false);
-                        ui->filterComboBox->setEnabled(false);
+                       filterComboBox->setEnabled(false);
                         ui->playVideoButton->setText("Stop playing");
                     }
                 }else{
                     videoRecorder->playVideo("");
-                    ui->cameraComboBox->setEnabled(true);
+                    cameraComboBox->setEnabled(true);
                     ui->captureFrameButton->setEnabled(true);
                     ui->captureVideoButton->setEnabled(true);
-                    ui->filterComboBox->setEnabled(true);
+                    filterComboBox->setEnabled(true);
                     ui->playVideoButton->setText("Play Video");
                 }
             });
 
-    if (ui->cameraComboBox->count() > 0) {
+    if (cameraComboBox->count() > 0) {
         videoRecorder->setCamera(0);
     }
 
@@ -100,27 +103,27 @@ void MainWindow::updateRecordingStatus(bool is_recording)
     ui->captureVideoButton->setText(is_recording ? "Stop Recording" : "Capture Video");
 
     if(is_recording){
-        ui->cameraComboBox->setEnabled(false);
-        ui->filterComboBox->setEnabled(false);
+        cameraComboBox->setEnabled(false);
+        filterComboBox->setEnabled(false);
         ui->playVideoButton->setEnabled(false);
     }else{
-        ui->cameraComboBox->setEnabled(true);
-        ui->filterComboBox->setEnabled(true);
+        cameraComboBox->setEnabled(true);
+        filterComboBox->setEnabled(true);
         ui->playVideoButton->setEnabled(true);
     }
 }
 
 void MainWindow::setPlayerOff()
 {
-    ui->cameraComboBox->setEnabled(true);
+    cameraComboBox->setEnabled(true);
     ui->captureFrameButton->setEnabled(true);
     ui->captureVideoButton->setEnabled(true);
-    ui->filterComboBox->setEnabled(true);
+    filterComboBox->setEnabled(true);
     ui->playVideoButton->setText("Play Video");
 }
 
 void MainWindow::updateCameraList()
 {
-    ui->cameraComboBox->clear();
-    ui->cameraComboBox->addItems(videoRecorder->getCameraList());
+    cameraComboBox->clear();
+    cameraComboBox->addItems(videoRecorder->getCameraList());
 }

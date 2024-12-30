@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "ui_mainwindow.h"
 #include "videorecorder.h"
+#include <QComboBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,5 +27,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     VideoRecorder *videoRecorder;
+    QComboBox* cameraComboBox = new QComboBox;
+    QComboBox* filterComboBox = new QComboBox;
 };
 #endif

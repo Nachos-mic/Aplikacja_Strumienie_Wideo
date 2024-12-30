@@ -58,7 +58,6 @@ void setFilterMask(int index){
 }
 
 QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
-    qDebug() << "Mask is Applied";
     QVideoFrame mod_frame = input_frame;
     if (!mod_frame.map(QVideoFrame::ReadOnly))
         return input_frame;
@@ -69,12 +68,14 @@ QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
     int height = frame.height();
     int offset = mask_size / 2;
 
+    // Nakładanie maski w kolorze musi się odbywać poprzez nakładanie jej na kanały RGB osobno , dlatego różne bufory tymczasowe
+
     std::vector<uchar> temp_buff_r(width * height);
     std::vector<uchar> temp_buff_g(width * height);
     std::vector<uchar> temp_buff_b(width * height);
 
-    QImage rgb_image = frame.convertToFormat(QImage::Format_RGB888);
-    const uchar *ptr_src = rgb_image.constBits();
+    QImage img_frame = frame.convertToFormat(QImage::Format_RGB888);
+    const uchar *ptr_src = img_frame.constBits();
 
     for(int y = offset; y < height - offset; ++y) {
         for(int x = offset; x < width - offset; ++x) {
@@ -94,7 +95,6 @@ QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
                     sum_b += static_cast<float>(ptr_src[src_pixel + 2]) * mask[index_mask];
                 }
             }
-
             int pixel_pos = y * width + x;
             temp_buff_r[pixel_pos] = static_cast<uchar>(std::clamp(sum_r, 0.0f, 255.0f));
             temp_buff_g[pixel_pos] = static_cast<uchar>(std::clamp(sum_g, 0.0f, 255.0f));
@@ -108,10 +108,10 @@ QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
 
     uchar *ptr_dst = result.bits(0);
     for (int i = 0; i < width * height; ++i) {
-        ptr_dst[i * 4] = temp_buff_b[i];     // B
-        ptr_dst[i * 4 + 1] = temp_buff_g[i]; // G
-        ptr_dst[i * 4 + 2] = temp_buff_r[i]; // R
-        ptr_dst[i * 4 + 3] = 255;            // A
+        ptr_dst[i * 4] = temp_buff_b[i];     // Kanał Niebieski
+        ptr_dst[i * 4 + 1] = temp_buff_g[i]; // Kanał Zielony
+        ptr_dst[i * 4 + 2] = temp_buff_r[i]; // Kanał Czerwony
+        ptr_dst[i * 4 + 3] = 255;            // Kanał Alpha
     }
 
     result.unmap();
