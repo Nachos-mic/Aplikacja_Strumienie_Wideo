@@ -11,10 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->toolBar->addWidget(cameraComboBox);
     ui->toolBar->addWidget(filterComboBox);
-    ui->toolBar->setStyleSheet("QToolButton { border-style: outset; border-width: 0.5px; border-radius: 5px; border-color: black; }");
+    ui->toolBar->setStyleSheet("QToolButton {border-style: outset; width: 100px; border-width: 1px; border-radius: 4px; border-color: black; margin-right: 3px; }");
 
-    cameraComboBox->setStyleSheet("QComboBox { border: 1px solid gray; border-radius: 3px; padding: 1px 1px 1px 1px; min-width: 6em;}");
-    filterComboBox->setStyleSheet("QComboBox { border: 1px solid gray; border-radius: 3px; padding: 1px 1px 1px 1px; min-width: 6em;}");
+    QString box_style_settings = "QComboBox { border: 1px solid gray; border-radius: 3px; padding: 1px 1px 1px 1px; min-width: 6em ; margin-right: 3px;}";
+
+    cameraComboBox->setStyleSheet(box_style_settings);
+    filterComboBox->setStyleSheet(box_style_settings);
 
     cameraComboBox->addItems(videoRecorder->getCameraList());
     filterComboBox->addItems(videoRecorder->getMaskList());
