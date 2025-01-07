@@ -116,8 +116,6 @@ void MainWindow::updateFrame(const QString& frame)
 void MainWindow::updateRecordingStatus(bool is_recording)
 {
 
-    ui->captureVideoButton->setText(is_recording ? "Stop Recording" : "Capture Video");
-
     if(is_recording){
         cameraComboBox->setEnabled(false);
         filterComboBox->setEnabled(false);

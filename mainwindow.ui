@@ -119,10 +119,14 @@
    </property>
   </action>
   <action name="captureVideoButton">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset theme="camera-video" resource="res.qrc">
      <normaloff>:/icons/icons/camera.png</normaloff>
-     <activeon>icons/camera.png</activeon>:/icons/icons/camera.png</iconset>
+     <normalon>:/icons/icons/recording.png</normalon>
+     <activeon>:/icons/icons/recording.png</activeon>:/icons/icons/camera.png</iconset>
    </property>
    <property name="text">
     <string>Capture Video</string>
