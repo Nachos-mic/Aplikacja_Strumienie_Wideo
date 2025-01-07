@@ -33,9 +33,6 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
-configure_file(${CMAKE_SOURCE_DIR}/style/MyWatch.qss
-               ${CMAKE_BINARY_DIR}/style/MyWatch.qss
-               COPYONLY)
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -46,6 +43,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         utils.cpp utils.h
         mask.h mask.cpp
         style/MyWatch.qss
+        icons/camera.png icons/recording.png
+        res.qrc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET VideoRecorder_Widgets APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

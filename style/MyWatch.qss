@@ -188,12 +188,6 @@ QToolBar::separator
     margin: 0px 4px;
 }
 
-QToolBar::handle
-{
-    background: rgba(121, 79, 52, 255);
-    width: 8px;
-    height: 8px;
-}
 
 
 /*-----QSlider-----*/

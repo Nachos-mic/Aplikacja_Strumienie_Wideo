@@ -119,6 +119,11 @@
    </property>
   </action>
   <action name="captureVideoButton">
+   <property name="icon">
+    <iconset theme="camera-video" resource="res.qrc">
+     <normaloff>:/icons/icons/camera.png</normaloff>
+     <activeon>icons/camera.png</activeon>:/icons/icons/camera.png</iconset>
+   </property>
    <property name="text">
     <string>Capture Video</string>
    </property>
@@ -143,6 +148,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

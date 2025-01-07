@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/camera.png</file>
+        <file>icons/recording.png</file>
+    </qresource>
+    <qresource prefix="/style">
+        <file>style/MyWatch.qss</file>
+    </qresource>
+</RCC>

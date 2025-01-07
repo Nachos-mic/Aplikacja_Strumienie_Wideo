@@ -19,10 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->setPathButton->setIcon(style()->standardIcon(QStyle::SP_DirLinkIcon));
 
-
     ui->videoPlayerWidget->setVisible(false);
     ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-
 
     connect(videoRecorder, &VideoRecorder::frameChanged,
             this, &MainWindow::updateFrame);
