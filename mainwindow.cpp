@@ -30,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(videoRecorder, &VideoRecorder::recordingStatusChanged,
             this, &MainWindow::updateRecordingStatus);
 
+    connect(videoRecorder, &VideoRecorder::startPauseChanged,
+            this, &MainWindow::updatePlayerStatus);
+
     connect(videoRecorder, &VideoRecorder::cameraListChanged,
             this, &MainWindow::updateCameraList);
 
@@ -45,6 +48,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->captureVideoButton, &QAction::triggered,
             videoRecorder, &VideoRecorder::startStopRecording);
+
+    connect(ui->playPauseButton, &QPushButton::clicked,
+            videoRecorder, &VideoRecorder::playPauseVideo);
 
     connect(filterComboBox,
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -122,6 +128,15 @@ void MainWindow::updateRecordingStatus(bool is_recording)
         cameraComboBox->setEnabled(true);
         filterComboBox->setEnabled(true);
         ui->playVideoButton->setEnabled(true);
+    }
+}
+
+void MainWindow::updatePlayerStatus(bool is_paused)
+{
+    if(is_paused){
+        ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    }else{
+        ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
     }
 }
 

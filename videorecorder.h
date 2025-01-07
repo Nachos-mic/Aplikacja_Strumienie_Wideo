@@ -43,6 +43,7 @@ public:
     bool getRecordingState(){return is_recording;};
     void setRecordingState(bool state){is_recording = state;};
 
+
     bool getPlayerState(){return is_video;};
     void setPlayerState(bool state){is_video = state;};
 
@@ -53,12 +54,14 @@ public slots:
     void setMask(int index);
     void captureFrame();
     void startStopRecording();
+    void playPauseVideo();
 
 signals:
     void cameraListChanged();
     void frameChanged(const QString& frame);
     void recordingStatusChanged(bool is_recording);
     void setPlayerFalse();
+    void startPauseChanged(bool is_paused);
 
 
 private slots:
@@ -91,6 +94,7 @@ private:
     bool is_recording = false;
     bool is_video = false;
     bool filter_set = false;
+    bool is_paused = false;
 
     cv::VideoWriter writer;
     int camera_list_size = 0;

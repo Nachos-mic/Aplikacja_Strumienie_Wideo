@@ -226,6 +226,8 @@ void VideoRecorder::playVideo(QString path){
         ptr_video_player_sink = new QVideoSink(this);
 
         ptr_media_player->setVideoSink(ptr_video_player_sink);
+        ptr_media_player->setSource(QUrl::fromLocalFile(path));
+
 
         connect(ptr_video_player_sink, &QVideoSink::videoFrameChanged,
                 this, [this](const QVideoFrame &frame) {
@@ -270,7 +272,7 @@ void VideoRecorder::playVideo(QString path){
         });
 
         is_video = true;
-        ptr_media_player->setSource(QUrl::fromLocalFile(path));
+
         ptr_media_player->play();
 
     }else{
@@ -285,6 +287,19 @@ void VideoRecorder::playVideo(QString path){
             ptr_camera->start();
             ptr_frame_timer->start();
         }
+    }
+}
+
+void VideoRecorder::playPauseVideo(){
+
+    if(!is_paused){
+        ptr_media_player->pause();
+        is_paused = true;
+        emit startPauseChanged(true);
+    }else{
+        ptr_media_player->play();
+        is_paused = false;
+        emit startPauseChanged(false);
     }
 }
 

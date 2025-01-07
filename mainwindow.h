@@ -23,6 +23,7 @@ public:
 private slots:
     void updateFrame(const QString& frame);
     void updateRecordingStatus(bool is_recording);
+    void updatePlayerStatus(bool is_paused);
     void setPlayerOff();
     void updateCameraList();
 
