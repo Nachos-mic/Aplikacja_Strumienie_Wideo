@@ -288,6 +288,8 @@ void VideoRecorder::playVideo(QString path){
     }
 }
 
+
+
 void VideoRecorder::setMask(int index){
     if(index > 0){
         filter_set = true;

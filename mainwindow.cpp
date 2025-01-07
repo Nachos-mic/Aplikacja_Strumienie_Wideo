@@ -11,13 +11,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->toolBar->addWidget(cameraComboBox);
     ui->toolBar->addWidget(filterComboBox);
-    ui->toolBar->setStyleSheet("QWidget { background : lightgrey; }" + toolButtons_style_settings);
-
-    cameraComboBox->setStyleSheet(box_style_settings);
-    filterComboBox->setStyleSheet(box_style_settings);
 
     cameraComboBox->addItems(videoRecorder->getCameraList());
     filterComboBox->addItems(videoRecorder->getMaskList());
+
+    ui->captureFrameButton->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+    ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    ui->setPathButton->setIcon(style()->standardIcon(QStyle::SP_DirLinkIcon));
+
+
+    ui->videoPlayerWidget->setVisible(false);
+    ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 
 
     connect(videoRecorder, &VideoRecorder::frameChanged,
@@ -65,8 +69,10 @@ MainWindow::MainWindow(QWidget *parent)
                         cameraComboBox->setEnabled(false);
                         ui->captureFrameButton->setEnabled(false);
                         ui->captureVideoButton->setEnabled(false);
-                       filterComboBox->setEnabled(false);
-                        ui->playVideoButton->setText("Stop playing");
+                        filterComboBox->setEnabled(false);
+                        ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+                        ui->videoPlayerWidget->setVisible(true);
+
                     }
                 }else{
                     videoRecorder->playVideo("");
@@ -74,7 +80,9 @@ MainWindow::MainWindow(QWidget *parent)
                     ui->captureFrameButton->setEnabled(true);
                     ui->captureVideoButton->setEnabled(true);
                     filterComboBox->setEnabled(true);
-                    ui->playVideoButton->setText("Play Video");
+                    ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+                    ui->videoPlayerWidget->setVisible(false);
+
                 }
             });
 
@@ -123,7 +131,9 @@ void MainWindow::setPlayerOff()
     ui->captureFrameButton->setEnabled(true);
     ui->captureVideoButton->setEnabled(true);
     filterComboBox->setEnabled(true);
-    ui->playVideoButton->setText("Play Video");
+    ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    ui->videoPlayerWidget->setVisible(false);
+
 }
 
 void MainWindow::updateCameraList()
