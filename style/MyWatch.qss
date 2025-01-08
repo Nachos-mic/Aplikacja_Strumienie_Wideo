@@ -193,7 +193,7 @@ QToolBar::separator
 /*-----QSlider-----*/
 QSlider{
         background: transparent;
-
+        margin: 2px;
 }
 
 

@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->videoPlayerWidget->setVisible(false);
     ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 
+    //Połączenia z VideoRecorder
+
     connect(videoRecorder, &VideoRecorder::frameChanged,
             this, &MainWindow::updateFrame);
 
@@ -36,6 +38,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(videoRecorder, &VideoRecorder::setPlayerFalse,
             this, &MainWindow::setPlayerOff);
+
+    connect(videoRecorder, &VideoRecorder::videoDurationChanged,
+            this, &MainWindow::updateVidDuration);
+
+    connect(videoRecorder, &VideoRecorder::videoPositionChanged,
+            this, &MainWindow::updateVidPosition);
+
+    //Połączenia UI
+
+    connect(ui->videoSlider, &QSlider::sliderMoved,
+            this, &MainWindow::handleSliderMoved);
 
     connect(cameraComboBox,
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -151,4 +164,18 @@ void MainWindow::updateCameraList()
 {
     cameraComboBox->clear();
     cameraComboBox->addItems(videoRecorder->getCameraList());
+}
+
+void MainWindow::updateVidPosition(qint64 position){
+
+    ui->videoSlider->setValue(position);
+}
+
+void MainWindow::updateVidDuration(qint64 duration){
+
+    ui->videoSlider->setRange(0,duration);
+}
+
+void MainWindow::handleSliderMoved(int slid_position){
+    videoRecorder->setPlayerPosition(slid_position);
 }

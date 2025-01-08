@@ -254,6 +254,12 @@ void VideoRecorder::playVideo(QString path){
                     emit frameChanged(this->frame);
                 });
 
+        connect(ptr_media_player, &QMediaPlayer::positionChanged,
+                this, &VideoRecorder::updateVidPosition);
+
+        connect(ptr_media_player, &QMediaPlayer::durationChanged,
+                this, &VideoRecorder::updateVidDuration);
+
         connect(ptr_media_player, &QMediaPlayer::mediaStatusChanged, this, [this](QMediaPlayer::MediaStatus status) {
             if (status == QMediaPlayer::EndOfMedia) {
                 ptr_media_player->stop();
@@ -303,6 +309,20 @@ void VideoRecorder::playPauseVideo(){
     }
 }
 
+void VideoRecorder::updateVidPosition(qint64 position)
+{
+    emit videoPositionChanged(position);
+}
+
+void VideoRecorder::updateVidDuration(qint64 duration)
+{
+    emit videoDurationChanged(duration);
+}
+
+void VideoRecorder::setPlayerPosition(qint64 position){
+
+    ptr_media_player->setPosition(position);
+}
 
 
 void VideoRecorder::setMask(int index){

@@ -27,6 +27,10 @@ private slots:
     void setPlayerOff();
     void updateCameraList();
 
+    void updateVidDuration(qint64 duration);
+    void updateVidPosition(qint64 position);
+    void handleSliderMoved(int slid_position);
+
 private:
     Ui::MainWindow *ui;
     VideoRecorder *videoRecorder;

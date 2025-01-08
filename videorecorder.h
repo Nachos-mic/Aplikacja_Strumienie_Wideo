@@ -55,6 +55,7 @@ public slots:
     void captureFrame();
     void startStopRecording();
     void playPauseVideo();
+    void setPlayerPosition(qint64 position);
 
 signals:
     void cameraListChanged();
@@ -63,13 +64,19 @@ signals:
     void setPlayerFalse();
     void startPauseChanged(bool is_paused);
 
+    void videoPositionChanged(qint64 position);
+    void videoDurationChanged(qint64 duration);
+
 
 private slots:
     void handleFrameChanged(const QVideoFrame &frame);
     void updateFrame();
+    void updateVidPosition(qint64 position);
+    void updateVidDuration(qint64 duration);
 
 private:
     void updateCameraList();
+
 
     QMediaCaptureSession capture_session;
     QMediaCaptureSession video_session;
@@ -100,6 +107,8 @@ private:
     int camera_list_size = 0;
 
     double fps = 30.0;
+
+    qint64 vid_position = 0;
 
 };
 
