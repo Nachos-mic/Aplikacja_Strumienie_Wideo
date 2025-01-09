@@ -94,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
                         cameraComboBox->setEnabled(false);
                         ui->captureFrameButton->setEnabled(false);
                         ui->captureVideoButton->setEnabled(false);
+                        ui->setCustomMask->setEnabled(false);
                         filterComboBox->setEnabled(false);
                         ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
                         ui->videoPlayerWidget->setVisible(true);
@@ -104,6 +105,7 @@ MainWindow::MainWindow(QWidget *parent)
                     cameraComboBox->setEnabled(true);
                     ui->captureFrameButton->setEnabled(true);
                     ui->captureVideoButton->setEnabled(true);
+                    ui->setCustomMask->setEnabled(true);
                     filterComboBox->setEnabled(true);
                     ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
                     ui->videoPlayerWidget->setVisible(false);
@@ -141,10 +143,12 @@ void MainWindow::updateRecordingStatus(bool is_recording)
         cameraComboBox->setEnabled(false);
         filterComboBox->setEnabled(false);
         ui->playVideoButton->setEnabled(false);
+        ui->setCustomMask->setEnabled(false);
     }else{
         cameraComboBox->setEnabled(true);
         filterComboBox->setEnabled(true);
         ui->playVideoButton->setEnabled(true);
+        ui->setCustomMask->setEnabled(true);
     }
 }
 
@@ -162,6 +166,7 @@ void MainWindow::setPlayerOff()
     cameraComboBox->setEnabled(true);
     ui->captureFrameButton->setEnabled(true);
     ui->captureVideoButton->setEnabled(true);
+    ui->setCustomMask->setEnabled(true);
     filterComboBox->setEnabled(true);
     ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->videoPlayerWidget->setVisible(false);
