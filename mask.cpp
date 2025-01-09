@@ -3,7 +3,9 @@
 #define mask_size 3
 
 std::vector<float> mask;
-std::vector<float> custom_mask;
+std::vector<float> custom_mask = {0,0,0,
+                                  0,1,0,
+                                  0,0,0};
 
 void setFilterMask(int index){
     switch(index) {

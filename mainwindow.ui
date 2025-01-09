@@ -153,6 +153,10 @@
    </property>
   </action>
   <action name="setCustomMask">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/icons/custom.png</normaloff>:/icons/icons/custom.png</iconset>
+   </property>
    <property name="text">
     <string>Set Custom Mask</string>
    </property>
