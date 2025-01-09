@@ -45,6 +45,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         style/MyWatch.qss
         icons/camera.png icons/recording.png
         res.qrc
+        maskpopup.h maskpopup.cpp maskpopup.ui
+
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET VideoRecorder_Widgets APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

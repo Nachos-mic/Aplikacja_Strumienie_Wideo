@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "ui_mainwindow.h"
 #include "videorecorder.h"
+#include "maskpopup.h"
 #include <QComboBox>
 #include <QIcon>
 
@@ -31,8 +32,11 @@ private slots:
     void updateVidPosition(qint64 position);
     void handleSliderMoved(int slid_position);
 
+    void setCustomMask();
+
 private:
     Ui::MainWindow *ui;
+    MaskPopUp *popUp;
     VideoRecorder *videoRecorder;
     QComboBox* cameraComboBox = new QComboBox;
     QComboBox* filterComboBox = new QComboBox;

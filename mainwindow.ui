@@ -106,6 +106,7 @@
    <addaction name="captureVideoButton"/>
    <addaction name="playVideoButton"/>
    <addaction name="setPathButton"/>
+   <addaction name="setCustomMask"/>
   </widget>
   <action name="captureFrameButton">
    <property name="icon">
@@ -146,6 +147,14 @@
   <action name="playVideoButton">
    <property name="text">
     <string>Play Video</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="setCustomMask">
+   <property name="text">
+    <string>Set Custom Mask</string>
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>

@@ -54,7 +54,7 @@ void setFilterMask(int index){
             0,  1,  2
         };
         break;
-    }
+    }  
 }
 
 QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
@@ -117,6 +117,7 @@ QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {
     result.unmap();
     return result;
 }
+
 
 
 
