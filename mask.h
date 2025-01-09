@@ -11,10 +11,11 @@
 
 
 extern std::vector<float> mask;
+extern std::vector<float> custom_mask;
 
 QVideoFrame applyMaskToFrame(const QVideoFrame &frame);
 void setFilterMask(int index);
-// void setCustomMask(std::vector<float> set_mask){mask = set_mask;}
+void setCustomFilterMask(std::vector<float> custom_mask);
 
 
 #endif // MASK_H

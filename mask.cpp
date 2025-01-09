@@ -3,6 +3,7 @@
 #define mask_size 3
 
 std::vector<float> mask;
+std::vector<float> custom_mask;
 
 void setFilterMask(int index){
     switch(index) {
@@ -54,7 +55,16 @@ void setFilterMask(int index){
             0,  1,  2
         };
         break;
+
+    case 7:
+        mask = custom_mask;
+        break;
     }  
+}
+
+void setCustomFilterMask(std::vector<float> mask){
+
+    custom_mask = mask;
 }
 
 QVideoFrame applyMaskToFrame(const QVideoFrame &input_frame) {

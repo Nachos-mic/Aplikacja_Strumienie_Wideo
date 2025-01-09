@@ -32,7 +32,7 @@ private slots:
     void updateVidPosition(qint64 position);
     void handleSliderMoved(int slid_position);
 
-    void setCustomMask();
+    void openPopUp();
 
 private:
     Ui::MainWindow *ui;

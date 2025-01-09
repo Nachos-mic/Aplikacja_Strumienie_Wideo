@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , popUp(nullptr)
+    , popUp(new MaskPopUp(this))
     , videoRecorder(new VideoRecorder(this))
 {
 
@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(videoRecorder, &VideoRecorder::videoPositionChanged,
             this, &MainWindow::updateVidPosition);
 
+
     //Połączenia UI
 
     connect(ui->videoSlider, &QSlider::sliderMoved,
@@ -65,7 +66,10 @@ MainWindow::MainWindow(QWidget *parent)
             videoRecorder, &VideoRecorder::playPauseVideo);
 
     connect(ui->setCustomMask, &QAction::triggered,
-            this, &MainWindow::setCustomMask);
+            this, &MainWindow::openPopUp);
+
+    connect(ui->setCustomMask, &QAction::triggered,
+            this, &MainWindow::openPopUp);
 
     connect(filterComboBox,
             static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -184,12 +188,9 @@ void MainWindow::handleSliderMoved(int slid_position){
     videoRecorder->setPlayerPosition(slid_position);
 }
 
-void MainWindow::setCustomMask()
+void MainWindow::openPopUp()
 {
-    if (!popUp) {
-        popUp = new MaskPopUp(this);
-    }
-    popUp->show();
-
+   popUp->show();
 }
+
 
