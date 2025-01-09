@@ -28,6 +28,10 @@
    <property name="text">
     <string>Cancel</string>
    </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/icons/cancel.png</normaloff>:/icons/icons/cancel.png</iconset>
+   </property>
   </widget>
   <widget class="QPushButton" name="AcceptButton">
    <property name="geometry">
@@ -40,6 +44,10 @@
    </property>
    <property name="text">
     <string>Accept</string>
+   </property>
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/icons/accept.png</normaloff>:/icons/icons/accept.png</iconset>
    </property>
   </widget>
   <widget class="QWidget" name="gridLayoutWidget">
@@ -239,6 +247,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

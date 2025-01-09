@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
     filterComboBox->addItems(videoRecorder->getMaskList());
 
     ui->videoPlayerWidget->setVisible(false);
-    ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 
     //Połączenia z VideoRecorder
 
@@ -150,11 +149,7 @@ void MainWindow::updateRecordingStatus(bool is_recording)
 
 void MainWindow::updatePlayerStatus(bool is_paused)
 {
-    if(is_paused){
-        ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-    }else{
-        ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-    }
+    qDebug() << "Paused";
 }
 
 void MainWindow::setPlayerOff()
@@ -164,7 +159,6 @@ void MainWindow::setPlayerOff()
     ui->captureVideoButton->setEnabled(true);
     ui->setCustomMask->setEnabled(true);
     filterComboBox->setEnabled(true);
-    ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     ui->videoPlayerWidget->setVisible(false);
 
 }

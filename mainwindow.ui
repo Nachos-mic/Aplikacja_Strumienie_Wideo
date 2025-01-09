@@ -78,6 +78,14 @@
          <property name="text">
           <string/>
          </property>
+         <property name="icon">
+          <iconset resource="res.qrc">
+           <normaloff>:/icons/icons/Pause.png</normaloff>
+           <normalon>:/icons/icons/Play.png</normalon>:/icons/icons/Pause.png</iconset>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>

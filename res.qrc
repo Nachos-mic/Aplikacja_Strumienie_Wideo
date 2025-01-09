@@ -8,6 +8,8 @@
         <file>icons/Pause.png</file>
         <file>icons/Play.png</file>
         <file>icons/Stop.png</file>
+        <file>icons/accept.png</file>
+        <file>icons/cancel.png</file>
     </qresource>
     <qresource prefix="/style">
         <file>style/MyWatch.qss</file>
