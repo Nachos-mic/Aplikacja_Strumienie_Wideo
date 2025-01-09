@@ -16,10 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     cameraComboBox->addItems(videoRecorder->getCameraList());
     filterComboBox->addItems(videoRecorder->getMaskList());
 
-    ui->captureFrameButton->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
-    ui->playVideoButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-    ui->setPathButton->setIcon(style()->standardIcon(QStyle::SP_DirLinkIcon));
-
     ui->videoPlayerWidget->setVisible(false);
     ui->playPauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
 

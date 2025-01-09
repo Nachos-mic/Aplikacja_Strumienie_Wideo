@@ -3,6 +3,11 @@
         <file>icons/camera.png</file>
         <file>icons/recording.png</file>
         <file>icons/custom.png</file>
+        <file>icons/Frame.png</file>
+        <file>icons/Path.png</file>
+        <file>icons/Pause.png</file>
+        <file>icons/Play.png</file>
+        <file>icons/Stop.png</file>
     </qresource>
     <qresource prefix="/style">
         <file>style/MyWatch.qss</file>

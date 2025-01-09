@@ -110,7 +110,8 @@
   </widget>
   <action name="captureFrameButton">
    <property name="icon">
-    <iconset theme="applications-development"/>
+    <iconset theme="applications-development" resource="res.qrc">
+     <normaloff>:/icons/icons/Frame.png</normaloff>:/icons/icons/Frame.png</iconset>
    </property>
    <property name="text">
     <string>Capture Frame</string>
@@ -137,6 +138,10 @@
    </property>
   </action>
   <action name="setPathButton">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/icons/Path.png</normaloff>:/icons/icons/Path.png</iconset>
+   </property>
    <property name="text">
     <string>Set Path</string>
    </property>
@@ -145,6 +150,11 @@
    </property>
   </action>
   <action name="playVideoButton">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/icons/Play.png</normaloff>
+     <normalon>:/icons/icons/Stop.png</normalon>:/icons/icons/Play.png</iconset>
+   </property>
    <property name="text">
     <string>Play Video</string>
    </property>
