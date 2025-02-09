@@ -24,6 +24,7 @@ signals:
 private:
     Ui::MaskPopUp *ui;
     void setMask();
+    QString edit_line_settings = "QLineEdit {background-color: white; border: black; border-radius: 10px; width: 40px; height: 40px}";
 };
 
 #endif // MASKPOPUP_H

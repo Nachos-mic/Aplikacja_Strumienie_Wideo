@@ -337,14 +337,3 @@ QComboBox:disabled
     border-color: #051a39;
 }
 
-
-/*-----QLineEdit-----*/
-
-QLineEdit {
-    width: 20px;
-    height: 20px;
-    color: white;
-    selection-color: white;
-    selection-background-color: gray;
-}
-
