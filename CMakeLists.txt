@@ -23,7 +23,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     MultimediaWidgets
 )
 
-set(OpenCV_DIR "C:/opencv/build_mingw")
+set(OpenCV_DIR "C:/opencv/build_mingw") // Tu wpisać ścieżkę do OpenCV 
 find_package(OpenCV REQUIRED)
 
 set(PROJECT_SOURCES
